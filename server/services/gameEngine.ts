@@ -1,7 +1,7 @@
 import { GameStateData, Player, AIRival, Asset, Action, Achievement, NewsItem } from "@shared/schema";
-import { MarketService } from "./marketService";
-import { AIService } from "./aiService";
-import { EventService } from "./eventService";
+import { MarketService } from "./marketService.js";
+import { AIService } from "./aiService.js";
+import { EventService } from "./eventService.js";
 
 export class GameEngine {
   private marketService: MarketService;
@@ -74,8 +74,8 @@ export class GameEngine {
     const aiActions = await this.aiService.generateAIActions(newGameState);
     
     // Process AI actions
-    for (const [rivalIndex, action] of aiActions.entries()) {
-      await this.processAIAction(newGameState, rivalIndex, action);
+    for (let i = 0; i < aiActions.length; i++) {
+      await this.processAIAction(newGameState, i, aiActions[i]);
     }
 
     // Update market
