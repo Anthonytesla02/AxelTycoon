@@ -1,0 +1,283 @@
+Objective:
+Build a single-player, strategic economic simulation game where the human plays as Axel, starting from scratch and competing against 3–6 AI-controlled rivals. The game must be entertaining, replayable, data-driven, and unpredictable — with gamified features (progression, achievements, narrative) to keep players engaged.
+
+
+---
+
+1. Core Requirements
+
+1. Platform: Computer game (web-based or desktop). Playable in browser on Replit.
+
+
+2. Gameplay: Turn-based strategy with real-time UI feedback.
+
+
+3. Opponents: Human-like AI characters with distinct personalities, goals, and probabilistic behaviors.
+
+
+4. Markets: Always unpredictable — use stochastic modeling (random seeds, distributions, volatility shocks) so no two runs are alike.
+
+
+5. Player Experience: Feels like a mix of chess (branching decisions, multi-turn consequences), poker (uncertainty, bluffing), and tycoon games (resource building).
+
+
+6. Gamification: Levels, achievements, hidden unlocks, event-driven story arcs, visual feedback for wins/losses, and reputation systems.
+
+
+
+
+---
+
+2. Game Loop (Turn Structure)
+
+Each turn consists of:
+
+1. Market Update Phase: Prices shift unpredictably (stochastic processes with fat-tail risks, sudden shocks).
+
+
+2. Decision Phase (Player + AI):
+
+Player (Axel) chooses 1–3 actions.
+
+AI opponents act simultaneously (probabilistically, influenced by their persona weights, past moves, and current market).
+
+
+
+3. Resolution Phase: Simulator resolves all moves: market changes, negotiations, random events, regulatory actions, betrayals, or alliances.
+
+
+4. Narrative/Event Phase: Flavor text, story beats, and dynamic news headlines appear (optional LLM-generated).
+
+
+5. End of Turn Update: XP, Reputation, Suspicion, Assets, Cash, and Network updated.
+
+
+
+
+---
+
+3. Core Systems
+
+3.1 Market Simulation
+
+Assets: Stocks, startups, commodities, crypto, real estate, speculative ventures.
+
+Randomness:
+
+Use stochastic volatility models (e.g., random walk + fat-tailed jumps).
+
+Random “black swan” events (market crashes, sudden booms).
+
+
+Feedback loops:
+
+Markets react to aggregated player + AI actions (e.g., over-investment bubbles, liquidity squeezes).
+
+
+Risk factor: Each asset has hidden risk modifiers not fully visible to players.
+
+
+3.2 AI Opponents
+
+Each AI is powered by probabilistic persona-driven decision-making:
+
+Personality Weights: Risk, Reputation, Ethics, Aggression, Short-term vs Long-term focus.
+
+Decision Randomness: AI actions drawn from probability distributions weighted by personality & current state.
+
+Memory & Bluffing: AI tracks past moves, bluffs intentions (sometimes honest, sometimes deceptive).
+
+Variance: Even with the same state, the AI won’t always choose the same move — unpredictability is critical.
+
+
+3.3 Gamification
+
+Levels/XP: Player gains XP from deals, negotiations, influence, and surviving audits. Level-ups unlock perks (better network, lower suspicion growth, higher reputation multipliers).
+
+Achievements:
+
+Survivor (avoid regulator for 20 turns),
+
+Kingmaker (influence AI ally into victory while still profiting),
+
+Ghost (keep suspicion below 10 all game).
+
+
+Unlockables: New asset classes, new AI rivals, hidden “elite” difficulty mode.
+
+Story Arcs: Narrative branches triggered by choices (e.g., betrayals, alliances, rivalries).
+
+
+
+---
+
+4. Player & State Model
+
+Player (Axel):
+
+Cash (C), Net Worth (NW), Reputation (R), Suspicion (SUS), Leverage (L), XP (Level progression).
+
+Skills: Algorithmics (ALG), Negotiation (NEG), Law (LAW), Operations (OPS).
+
+Network: key allies & rivals.
+
+
+State Variables:
+
+{
+ "cash": 5000,
+ "netWorth": 5000,
+ "reputation": 50,
+ "suspicion": 0,
+ "leverage": 1.0,
+ "xp": 0,
+ "level": 1,
+ "skills": {"ALG":1,"NEG":1,"LAW":1,"OPS":1},
+ "network": [],
+ "holdings": [],
+ "turn": 0
+}
+
+
+---
+
+5. Actions (Examples)
+
+Invest(asset, amount): Risk vs reward. Stochastic outcomes.
+
+Negotiate(counterparty, deal): Can succeed, fail, or partially succeed. Success probability depends on NEG, Reputation, AI willingness, and randomness.
+
+Hire/Fire staff: Boost skills or reduce costs. Random chance of betrayal or incompetence.
+
+Influence(target, magnitude): Reputation gain/loss. Random suspicion checks.
+
+Expose(opponent): Reduces rival reputation, but risk of backfire.
+
+LegalShield(amount): Lowers future suspicion growth but drains cash.
+
+Philanthropy(project): Reputation boost, possible hidden bonus.
+
+
+
+---
+
+6. Randomness & Branching
+
+Every action has multiple possible outcomes (≥3).
+
+Outcomes determined by data-driven formulas + probability distributions:
+
+Example: Investing in a startup might yield:
+
+Outcome A (25%): Double money.
+
+Outcome B (50%): Moderate gain or loss.
+
+Outcome C (20%): Startup collapses.
+
+Outcome D (5%): Sudden scandal → loss + reputation hit.
+
+
+
+AI responses also stochastic, making each game session unique.
+
+
+
+---
+
+7. Entertainment Features
+
+Visual Dashboard: Animated gauges for Reputation, Suspicion, Cash.
+
+Decision Trees: Display branching consequences (like chess moves).
+
+Narrative Newsfeed: AI-generated in-game news (“Axel linked to risky fund”, “Rival launches bold new venture”).
+
+Victory/Defeat States:
+
+Win: Reach billionaire status, dominate rivals, survive regulators.
+
+Lose: Bankrupt, imprisoned, destroyed reputation, outcompeted.
+
+Draw/Alt: Retire early, pivot careers, secret endings.
+
+
+
+
+---
+
+8. Technical Implementation
+
+Language/Framework:
+
+Backend: Python or Node.js for simulation.
+
+Frontend: React (with Tailwind for styling).
+
+
+AI Models:
+
+Use Mistral (7B/8x7B) for personality-driven AI decision generation.
+
+Randomness + persona weighting ensure non-deterministic outcomes.
+
+
+Game Engine Loop:
+
+Deterministic core simulation functions.
+
+Random seeds per game.
+
+AI personalities + probability weights feed into simulation.
+
+
+
+
+---
+
+9. Deliverables
+
+Replit AI Agent should produce:
+
+1. Full game codebase (backend + frontend).
+
+
+2. Simulation engine with unpredictable market dynamics.
+
+
+3. AI decision system (Mistral integrated, persona-driven).
+
+
+4. UI with gamified features: XP bar, achievements, newsfeed, branching decision viewer.
+
+
+5. 5 fully implemented AI rivals (distinct personalities, probabilistic).
+
+
+6. 10+ asset classes with stochastic behavior.
+
+
+7. 20+ random events with story/narrative hooks.
+
+
+8. Save/load system with random seeds for replayability.
+
+
+
+
+---
+
+10. Safety & Compliance
+
+All “illegal” actions are abstracted (e.g., “Influence” instead of bribery, “Expose” instead of doxxing).
+
+No real instructions for illegal behavior.
+
+Debrief after risky actions explains systemic lessons (e.g., “Regulators monitor suspiciously fast wealth gains”).
+
+
+
+---
+
+⚡ Instruction to Replit AI Agent:
+Generate the complete game implementation of Shadow & Ledger: Axel per the above spec. It must be fully playable, entertaining, with unpredictable outcomes each run.
