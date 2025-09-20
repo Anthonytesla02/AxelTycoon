@@ -16,7 +16,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Card, CardContent } from "@/components/ui/card";
-import { Loader2, Play, Users } from "lucide-react";
+import { Loader2, Play, Users, Menu, X } from "lucide-react";
 
 export default function Game() {
   const { toast } = useToast();
@@ -28,6 +28,7 @@ export default function Game() {
   const [actionsUsed, setActionsUsed] = useState(0);
   const [unlockedAchievement, setUnlockedAchievement] = useState<Achievement | null>(null);
   const [lastDecisionImpact, setLastDecisionImpact] = useState<any>(null);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const maxActions = 3;
 
   // Load existing game or show new game dialog
@@ -219,7 +220,7 @@ export default function Game() {
                 Start New Game
               </Button>
 
-              {savedGames && Array.isArray(savedGames) && savedGames.length > 0 && (
+              {savedGames && Array.isArray(savedGames) && savedGames.length > 0 ? (
                 <div>
                   <h3 className="text-sm font-medium mb-2">Continue Existing Game</h3>
                   <div className="space-y-2">
@@ -237,7 +238,7 @@ export default function Game() {
                     ))}
                   </div>
                 </div>
-              )}
+              ) : null}
             </div>
           </CardContent>
         </Card>
@@ -297,45 +298,86 @@ export default function Game() {
         onSettings={handleSettings}
       />
 
-      <div className="flex h-screen">
-        <PlayerSidebar
-          player={gameData.player}
-          onQuickAction={handleQuickAction}
-        />
+      <div className="flex min-h-screen relative">
+        {/* Mobile Menu Button */}
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => setSidebarOpen(!sidebarOpen)}
+          className="fixed top-16 left-4 z-50 md:hidden"
+          data-testid="button-mobile-menu"
+        >
+          {sidebarOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
+        </Button>
 
-        <main className="flex-1 overflow-hidden">
-          <div className="h-full grid grid-rows-2 gap-1">
-            {/* Top Row */}
-            <div className="grid grid-cols-3 gap-1">
-              <MarketOverview
-                assets={gameData.assets}
-                marketVolatility={gameData.gameSettings.marketVolatility}
-              />
-              <AIRivals rivals={gameData.rivals} />
-              <Achievements
-                achievements={gameData.achievements}
-                recentNotifications={[
-                  { type: "xp", message: "Successful negotiation with Sofia Chen", value: 250 },
-                  { type: "reputation", message: "Completed philanthropic project", value: 5 },
-                ]}
-              />
-            </div>
+        {/* Mobile Overlay */}
+        {sidebarOpen && (
+          <div 
+            className="fixed inset-0 bg-black/50 z-30 md:hidden" 
+            onClick={() => setSidebarOpen(false)}
+          />
+        )}
 
-            {/* Bottom Row */}
-            <div className="grid grid-cols-2 gap-1">
-              <NewsFeed newsItems={gameData.newsItems} />
-              <DecisionCenter
-                actionsRemaining={maxActions - actionsUsed}
-                maxActions={maxActions}
-                onActionSelect={handleActionSelect}
-                onEndTurn={handleEndTurn}
-                lastDecisionImpact={lastDecisionImpact}
-                riskProfile={{
-                  marketExposure: 68,
-                  regulatoryRisk: 23,
-                  liquidityRisk: 35,
-                }}
-              />
+        {/* Sidebar */}
+        <div className={`
+          fixed md:relative z-40 
+          w-80 h-full 
+          transform transition-transform duration-300 ease-in-out
+          ${sidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
+        `}>
+          <PlayerSidebar
+            player={gameData.player}
+            onQuickAction={handleQuickAction}
+          />
+        </div>
+
+        {/* Main Content */}
+        <main className="flex-1 overflow-y-auto md:overflow-hidden w-full md:w-auto">
+          <div className="min-h-full p-1">
+            {/* Mobile: Stack vertically, Desktop: Grid layout */}
+            <div className="min-h-screen md:h-full flex flex-col md:grid md:grid-rows-2 gap-1">
+              {/* Top Row - Responsive grid */}
+              <div className="flex-1 flex flex-col md:grid md:grid-cols-3 gap-1 min-h-0">
+                <div className="flex-1 min-h-[200px] md:min-h-0">
+                  <MarketOverview
+                    assets={gameData.assets}
+                    marketVolatility={gameData.gameSettings.marketVolatility}
+                  />
+                </div>
+                <div className="flex-1 min-h-[200px] md:min-h-0">
+                  <AIRivals rivals={gameData.rivals} />
+                </div>
+                <div className="flex-1 min-h-[200px] md:min-h-0">
+                  <Achievements
+                    achievements={gameData.achievements}
+                    recentNotifications={[
+                      { type: "xp", message: "Successful negotiation with Sofia Chen", value: 250 },
+                      { type: "reputation", message: "Completed philanthropic project", value: 5 },
+                    ]}
+                  />
+                </div>
+              </div>
+
+              {/* Bottom Row - Responsive grid */}
+              <div className="flex-1 flex flex-col md:grid md:grid-cols-2 gap-1 min-h-0">
+                <div className="flex-1 min-h-[200px] md:min-h-0">
+                  <NewsFeed newsItems={gameData.newsItems} />
+                </div>
+                <div className="flex-1 min-h-[200px] md:min-h-0">
+                  <DecisionCenter
+                    actionsRemaining={maxActions - actionsUsed}
+                    maxActions={maxActions}
+                    onActionSelect={handleActionSelect}
+                    onEndTurn={handleEndTurn}
+                    lastDecisionImpact={lastDecisionImpact}
+                    riskProfile={{
+                      marketExposure: 68,
+                      regulatoryRisk: 23,
+                      liquidityRisk: 35,
+                    }}
+                  />
+                </div>
+              </div>
             </div>
           </div>
         </main>
