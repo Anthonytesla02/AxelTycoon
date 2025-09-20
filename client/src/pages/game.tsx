@@ -34,7 +34,7 @@ export default function Game() {
   const { data: gameState, isLoading, error } = useQuery({
     queryKey: ["/api/game", gameId],
     enabled: !!gameId,
-    refetchInterval: false,
+    refetchInterval: 2000, // Refetch every 2 seconds for real-time balance updates
   });
 
   // Create new game mutation
@@ -73,7 +73,9 @@ export default function Game() {
       
       // Check for new achievements
       const newAchievements = newGameData.achievements.filter(a => a.unlocked);
-      const oldAchievements = (gameState?.gameData as GameStateData)?.achievements?.filter(a => a.unlocked) || [];
+      const oldAchievements = gameState && (gameState as any).gameData 
+        ? ((gameState as any).gameData as GameStateData).achievements?.filter(a => a.unlocked) || []
+        : [];
       
       if (newAchievements.length > oldAchievements.length) {
         const latestAchievement = newAchievements[newAchievements.length - 1];
@@ -221,7 +223,7 @@ export default function Game() {
                 <div>
                   <h3 className="text-sm font-medium mb-2">Continue Existing Game</h3>
                   <div className="space-y-2">
-                    {savedGames.map((game: any) => (
+                    {(savedGames as any[]).map((game: any) => (
                       <Button
                         key={game.id}
                         variant="outline"
@@ -272,7 +274,20 @@ export default function Game() {
     );
   }
 
-  const gameData = gameState?.gameData as GameStateData;
+  const gameData = gameState && (gameState as any).gameData 
+    ? (gameState as any).gameData as GameStateData 
+    : null;
+
+  if (!gameData) {
+    return (
+      <div className="min-h-screen bg-background text-foreground flex items-center justify-center">
+        <div className="flex items-center space-x-2">
+          <Loader2 className="h-6 w-6 animate-spin" />
+          <span>Loading game data...</span>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background text-foreground">
