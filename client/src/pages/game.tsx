@@ -282,35 +282,32 @@ export default function Game() {
         onSettings={handleSettings}
       />
 
-      <div className="flex flex-col lg:flex-row min-h-screen">
-        {/* Single PlayerSidebar with responsive behavior */}
+      <div className="flex h-screen">
         <PlayerSidebar
           player={gameData.player}
           onQuickAction={handleQuickAction}
         />
 
-        <main className="flex-1 overflow-hidden p-1">
-          <div className="h-full grid grid-rows-1 lg:grid-rows-2 gap-1">
-            {/* Top Row - Stack vertically on mobile */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-1">
+        <main className="flex-1 overflow-hidden">
+          <div className="h-full grid grid-rows-2 gap-1">
+            {/* Top Row */}
+            <div className="grid grid-cols-3 gap-1">
               <MarketOverview
                 assets={gameData.assets}
                 marketVolatility={gameData.gameSettings.marketVolatility}
               />
               <AIRivals rivals={gameData.rivals} />
-              <div className="md:col-span-2 lg:col-span-1">
-                <Achievements
-                  achievements={gameData.achievements}
-                  recentNotifications={[
-                    { type: "xp", message: "Successful negotiation with Sofia Chen", value: 250 },
-                    { type: "reputation", message: "Completed philanthropic project", value: 5 },
-                  ]}
-                />
-              </div>
+              <Achievements
+                achievements={gameData.achievements}
+                recentNotifications={[
+                  { type: "xp", message: "Successful negotiation with Sofia Chen", value: 250 },
+                  { type: "reputation", message: "Completed philanthropic project", value: 5 },
+                ]}
+              />
             </div>
 
-            {/* Bottom Row - Stack vertically on mobile */}
-            <div className="hidden lg:grid grid-cols-1 lg:grid-cols-2 gap-1">
+            {/* Bottom Row */}
+            <div className="grid grid-cols-2 gap-1">
               <NewsFeed newsItems={gameData.newsItems} />
               <DecisionCenter
                 actionsRemaining={maxActions - actionsUsed}
@@ -324,23 +321,6 @@ export default function Game() {
                   liquidityRisk: 35,
                 }}
               />
-            </div>
-
-            {/* Mobile: Show decision center and news separately */}
-            <div className="lg:hidden space-y-1">
-              <DecisionCenter
-                actionsRemaining={maxActions - actionsUsed}
-                maxActions={maxActions}
-                onActionSelect={handleActionSelect}
-                onEndTurn={handleEndTurn}
-                lastDecisionImpact={lastDecisionImpact}
-                riskProfile={{
-                  marketExposure: 68,
-                  regulatoryRisk: 23,
-                  liquidityRisk: 35,
-                }}
-              />
-              <NewsFeed newsItems={gameData.newsItems} />
             </div>
           </div>
         </main>

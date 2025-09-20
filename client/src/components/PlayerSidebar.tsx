@@ -13,7 +13,7 @@ export function PlayerSidebar({ player, onQuickAction }: PlayerSidebarProps) {
   const xpProgress = (player.xp / (player.level * 1000)) * 100;
 
   return (
-    <aside className="w-full lg:w-80 bg-card lg:border-r border-border p-4 lg:p-6 overflow-y-auto max-h-screen lg:max-h-none">
+    <aside className="w-80 bg-card border-r border-border p-6 overflow-y-auto">
       {/* Player Avatar & Level */}
       <div className="mb-6">
         <div className="flex items-center space-x-4">

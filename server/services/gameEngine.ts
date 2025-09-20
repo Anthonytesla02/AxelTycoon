@@ -186,9 +186,6 @@ export class GameEngine {
     player.reputation = Math.max(0, Math.min(100, player.reputation + reputationChange));
     player.suspicion = Math.max(0, Math.min(100, player.suspicion + suspicionChange));
     player.xp += xpGain;
-    
-    // Update player stats immediately to reflect new holdings and net worth
-    this.updatePlayerStats(gameState);
   }
 
   private async processNegotiateAction(gameState: GameStateData, action: Action): Promise<void> {
@@ -237,9 +234,6 @@ export class GameEngine {
     player.reputation = Math.max(0, Math.min(100, player.reputation + reputationChange));
     player.suspicion = Math.max(0, Math.min(100, player.suspicion + suspicionChange));
     player.xp += xpGain;
-    
-    // Update player stats immediately
-    this.updatePlayerStats(gameState);
   }
 
   private async processInfluenceAction(gameState: GameStateData, action: Action): Promise<void> {
@@ -287,9 +281,6 @@ export class GameEngine {
     player.reputation = Math.max(0, Math.min(100, player.reputation + reputationChange));
     player.suspicion = Math.max(0, Math.min(100, player.suspicion + suspicionChange));
     player.xp += xpGain;
-    
-    // Update player stats immediately
-    this.updatePlayerStats(gameState);
   }
 
   private async processLegalShieldAction(gameState: GameStateData, action: Action): Promise<void> {
@@ -303,9 +294,6 @@ export class GameEngine {
     player.cash -= amount;
     player.suspicion = Math.max(0, player.suspicion - suspicionReduction);
     player.xp += 50;
-    
-    // Update player stats immediately
-    this.updatePlayerStats(gameState);
   }
 
   private async processPhilanthropyAction(gameState: GameStateData, action: Action): Promise<void> {
@@ -319,9 +307,6 @@ export class GameEngine {
     player.cash -= amount;
     player.reputation = Math.min(100, player.reputation + reputationGain);
     player.xp += 100;
-    
-    // Update player stats immediately
-    this.updatePlayerStats(gameState);
   }
 
   private async processExposeAction(gameState: GameStateData, action: Action): Promise<void> {
@@ -372,9 +357,6 @@ export class GameEngine {
     player.suspicion = Math.max(0, Math.min(100, player.suspicion + suspicionChange));
     player.xp += xpGain;
     rival.stats.reputation = Math.max(0, rival.stats.reputation);
-    
-    // Update player stats immediately
-    this.updatePlayerStats(gameState);
   }
 
   private async processAIAction(gameState: GameStateData, rivalIndex: number, action: Action): Promise<void> {
